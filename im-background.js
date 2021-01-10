@@ -39,7 +39,11 @@ messenger.runtime.onInstalled.addListener(async ({ reason, temporary }) => {
 messenger.messageDisplay.onMessageDisplayed.addListener( async (tab, message) => {
   // console.log(`Message displayed in tab ${tab.id}: ${message.subject}`);
   
-  let data = await messenger.Utilities.attachmentGetImages(tab.windowId);
+  let raw = await messenger.messages.getRaw(message.id)
+  let oMime = new simpleMIMEClass();
+  oMime.Parse(raw);
+  let data =  oMime.GetImageData();
+
   if (data.length == 0) {
     messenger.messageDisplayAction.disable(tab.tabID);
   } else {
@@ -48,14 +52,19 @@ messenger.messageDisplay.onMessageDisplayed.addListener( async (tab, message) =>
 });
 
 messenger.messageDisplayAction.onClicked.addListener(async (tab, info) => {  
-  let data = await messenger.Utilities.attachmentGetImages(tab.windowId, {populate: true});
+  // Get displayed message and store the attachment data of this message.
+  let message = await messenger.messageDisplay.getDisplayedMessage(tab.id);
+
+  let raw = await messenger.messages.getRaw(message.id)
+  let oMime = new simpleMIMEClass();
+  oMime.Parse(raw);
+  let data =  oMime.GetImageData();
+
   if (data.length == 0) {
     messenger.messageDisplayAction.disable(tab.tabID);
     return;
   }
   
-  // Get displayed message and store the attachment data of this message.
-  let message = await messenger.messageDisplay.getDisplayedMessage(tab.id);
   // store the attachment Data in the background page, per message
   attachmentData[message.id] = data;
   

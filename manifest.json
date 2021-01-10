@@ -21,23 +21,15 @@
     },
     
     "background": {
-        "scripts": ["im-background.js"]
+        "scripts": [
+            "mimeparser/mimeparser.js",
+            "im-background.js"
+        ]
     },
 
     "message_display_action": {
         "default_title": "Imgview"
 
-    },
-
-    "experiment_apis": {
-        "Utilities": {
-            "schema": "api/Utilities/schema.json",
-            "parent": {
-                "scopes": ["addon_parent"],
-                "paths": [["Utilities"]],
-                "script": "api/Utilities/implementation.js"
-            }
-        }
     }
 }
                                                                                                                                                         
